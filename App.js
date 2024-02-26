@@ -1,20 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component, useEffect } from "react";
+import { NativeModules, NativeEventEmitter, Button, View } from "react-native";
+import { MetaMapRNSdk } from "react-native-expo-metamap-sdk";
 
-export default function App() {
+function App(props) {
+  console.log("sdk: ", sdk);
+
+  useEffect(() => {
+    const MetaMapVerifyResult = new NativeEventEmitter(
+      NativeModules.MetaMapRNSdk
+    );
+    MetaMapVerifyResult.addListener("verificationSuccess", (data) =>
+      console.log(data)
+    );
+    MetaMapVerifyResult.addListener("verificationCanceled", (data) =>
+      console.log(data)
+    );
+  });
+  const handleMetaMapClickButton = (props) => {
+    MetaMapRNSdk.showFlow(
+      "623e24701fbf38001c05ba92",
+      "65b9b68fbab7d7001c952898",
+      {}
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "powderblue",
+      }}
+    >
+      <Button onPress={() => handleMetaMapClickButton()} title="Click here" />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
